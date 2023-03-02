@@ -20,5 +20,6 @@ from app01 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('depart/list/',views.depart_list),
-    path('user/form/add/',views.user_add)
+    path('user/form/add/',views.user_add),
+    path('user/list',views.user_list),
 ]

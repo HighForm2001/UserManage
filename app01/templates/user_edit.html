@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <form method="post" novalidate>
+    <form method="post">
         {% csrf_token %}
         {% for item in form %}
             {{ item.label }} : {{ item }}<span style="color:red">{{ item.errors.0 }}</span>

@@ -13,7 +13,7 @@ class UserInfo(models.Model):
     password = models.CharField(verbose_name="密码", max_length=32)
     app = models.IntegerField(verbose_name="年龄")
     account = models.DecimalField(verbose_name="账户余额", max_digits=12, decimal_places=2, default=0)
-    create_time = models.DateTimeField(verbose_name="入职时间")
+    create_time = models.DateField(verbose_name="入职时间")
     # 生成数据 会自动加上"_id"
     # to = 关联的数据表
     # to_field = 关联的数据属性
