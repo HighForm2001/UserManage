@@ -1,11 +1,13 @@
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app01.models import Department, UserInfo
+from app01.models import Department, UserInfo,Task
 # Create your views here.
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 class MyForm(forms.ModelForm):
     # validate method 1
     # validator
@@ -176,3 +178,41 @@ def user_login(request):
 def logout(request):
     request.session.clear()
     return HttpResponse("logout successful")
+
+
+class TaskModelForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = "__all__"
+
+
+def task_list(request):
+    """任务列表"""
+    query_set = Task.objects.all()
+    form = TaskModelForm
+    context = {"query":query_set,"form":form}
+    return render(request,'task_list.html',context)
+
+
+
+# to exempt csrf verification
+@csrf_exempt
+def task_ajax(request):
+    print(request.GET)
+    print(request.POST)
+    data_dict = {"status":True,'data':[11,22,33]}
+    return JsonResponse(data_dict)
+
+@csrf_exempt
+def task_add(request):
+    print(request.POST)
+    # 校验
+    form = TaskModelForm(data=request.POST)
+    if form.is_valid():
+        form.save()
+        data_dict = {"status":True}
+        return JsonResponse(data_dict)
+    data_dict = {'status':False, 'error':form.errors}
+    return JsonResponse(data_dict)
+
+    return HttpResponse("成功了")

@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div >
+        <h1>任务管理</h1>
+    <h3>
+        example1
+    </h3>
+    <input type="text" id="txtUser" placeholder="姓名">
+    <input type="text" id="txtPwd" placeholder="密码">
+    <input type="button" value="click me!" onclick="clickMe();" id="btn1">
+    </div>
+    <div>
+        <h3>example 2</h3>
+        <form id="form3">
+            <input type="text" name="name" placeholder="姓名">
+            <input type="text" name="pwd" placeholder="密码">
+            <input type="text" name="age" placeholder="年龄">
+            <input type="text" name="email" placeholder="邮箱">
+
+        </form>
+        <input type="button" value="click me!" id="btn3">
+    </div>
+    <div>
+        <h1>表单</h1>
+        <form id="formAdd">
+            {% csrf_token %}
+            {% for field in form %}
+                <div style="position:relative;">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <span style="color:red;position: absolute;" class="error-msg"></span>
+                </div>
+            {% endfor %}
+        </form>
+    <input type="button" value="submit form" id="btn4">
+    </div>
+    <div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>级别</th>
+            <th>负责人</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in query %}
+            <tr>
+            <th>{{ data.id }}</th>
+            <td>{{ data.title }}</td>
+            <td>{{ data.get_level_display }}</td>
+            <td>{{ data.user }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $(function (){
+            // 页面框架加载完成之后代码自动执行 与function clickMe方法等效
+                bindButton1();
+                bindButton3();
+                bindButton4();
+
+        })
+        function bindButton1(){
+            $('#btn1').click(function(){
+                $.ajax({
+                    url:'/task/ajax/',
+                    type:'get',
+                    data:{
+                        n1:$('#txtUser').val(),
+                        n2:$('#txtPwd').val()
+                    },
+                    datatype:"JSON",
+                    success:function(res){
+                        console.log(res)
+                        console.log(res.data)
+                    }
+                })
+            })
+        }
+        function bindButton3(){
+            $('#btn3').click(function(){
+                $.ajax({
+                    url:'/task/ajax/',
+                    type:'get',
+                    data:$('#form3').serialize(),
+                    datatype:"JSON",
+                    success:function(res){
+                        console.log(res)
+                    }
+                })
+            })
+        }
+        function bindButton4(){
+            $('#btn4').click(function(){
+                $('.error-msg').empty()
+                $.ajax({
+                    url:'/task/add/',
+                    type:'post',
+                    data:$('#formAdd').serialize(),
+                    datatype:"JSON",
+                    success:function(res){
+                        if (res.status){
+                            alert("添加成功")
+                            location.reload()
+                            $('#formAdd')[0].reset();
+                             //显示对话框
+                            //$('#mymodal).modal('show')
+
+                            //关闭对话框
+                            //$('#mymodal).modal('hide')
+
+                        }else{
+                            $.each(res.error, function(name, data){
+                                $("#id_"+name).next().text(data[0])
+                            })
+                        }
+                    }
+                })
+            })
+        }
+
+        function clickMe(){
+            $.ajax({
+                url:'/task/ajax/',
+                type:'get',
+                data:{
+                    n1:123,
+                    n2:345
+                },
+                success:function(res){
+                    console.log(res)
+                }
+            })
+        }
+    </script>
+{% endblock %}

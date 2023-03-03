@@ -21,5 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('depart/list/',views.depart_list),
     path('user/form/add/',views.user_add),
-    path('user/list',views.user_list),
+    path('user/list/',views.user_list),
+    path('task/list/',views.task_list),
+    path('task/ajax/',views.task_ajax),
+    path('task/add/',views.task_add)
 ]

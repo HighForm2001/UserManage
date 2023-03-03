@@ -28,3 +28,17 @@ class UserInfo(models.Model):
         (2, "女")
     )
     gender = models.SmallIntegerField(verbose_name="性别", choices=gender_choice)
+
+
+class Task(models.Model):
+    """任务"""
+    level_choices=(
+        (1,"紧急"),
+        (2,"重要"),
+        (3,"临时")
+    )
+    level = models.SmallIntegerField(verbose_name="级别",choices=level_choices,default=1)
+    title=models.CharField(verbose_name="任务名字",max_length=64)
+    detail = models.TextField(verbose_name="任务内容")
+    # user = models.ForeignKey(verbose_name="负责人",to="UserInfo",on_delete=models.CASCADE)
+    user = models.CharField(verbose_name='负责人',max_length=64)
